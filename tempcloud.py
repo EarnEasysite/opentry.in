@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, render_template
 import cloudinary
 import cloudinary.api
-
+import os
 app = Flask(__name__)
 
 # Configure Cloudinary with your credentials
@@ -55,4 +55,5 @@ def edit_template():
     return render_template('edit_template.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))  # Get port from environment, default to 5000
+    app.run(host='0.0.0.0', port=port)
