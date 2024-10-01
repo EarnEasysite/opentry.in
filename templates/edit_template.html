@@ -558,12 +558,14 @@ button svg {
     </nav> 
     
     <div class="editor-container">
-        <div class="video-section" id="videoSection">
-            <video id="videoPlayer" autoplay loop muted>
-                <source src="your-video-url.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </div>
+    <div class="video-section" id="videoSection">
+        <video id="videoPlayer" autoplay playsinline loop muted>
+            <source src="your-video-url.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+</div>
+
         
         <div class="progress-container">
             <div id="progressBar"></div>
