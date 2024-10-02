@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://unpkg.com/cropperjs/dist/cropper.css" />
     <script src="https://unpkg.com/cropperjs/dist/cropper.js"></script>
     <link rel="icon" href="https://res.cloudinary.com/dkr5qwdjd/image/upload/v1726940057/Mythesis_images/qwbmpso8kb9dkr4bdhkm.png" type="image/x-icon">
-    <title>Edit Template</title>
+    <title>Edit Section</title>
     <style>
 body {
     font-family: Arial, sans-serif;
@@ -952,6 +952,7 @@ async function submitRenderRequest(templateId, renderId, uploadi_mg) {
             videoPlayer.play();
             stopButtonColorToggle();
             renderButton.classList.remove('processing-green');
+            attachRedirectToButton(newViUrl);
         } else {
             console.error('Failed to submit render request:', data.error || 'Unknown error');
             
@@ -976,7 +977,15 @@ async function submitRenderRequest(templateId, renderId, uploadi_mg) {
             console.log('Button not found!');
         }
     });
+// Function to attach redirection functionality to the button
+function attachRedirectToButton(url) {
+    const exportButton = document.getElementById('export-templete');
 
+    // Add an event listener to redirect on click
+    exportButton.addEventListener('click', () => {
+        window.location.href = url; // Redirect to the video URL
+    });
+}
 
     </script>
 </body>
