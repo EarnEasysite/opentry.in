@@ -437,10 +437,10 @@ button svg {
     gap: 8px;
     transition: background-color 0.3s ease;
 }
-
-.render-button:hover {
-    background-color: #35a25d; /* Light green when hovered */
+.processing-green {
+    background-color: #35a25d; /* Dark Green */
 }
+
 .spinner {
   width: 48px;
   height: 48px;
@@ -856,11 +856,26 @@ muteUnmuteButton.addEventListener('click', () => {
         }
     });
 
-// JavaScript code
+    let colorToggleInterval;
+
+function toggleButtonColor(button) {
+    // Start the color toggle interval
+    colorToggleInterval = setInterval(() => {
+        button.classList.toggle('processing-green'); // Toggle between green and dark green
+    }, 500); // Toggle every 500ms
+}
+
+function stopButtonColorToggle() {
+    clearInterval(colorToggleInterval); // Stop the color toggle
+}
+    // JavaScript code
 document.getElementById("renderButton").addEventListener("click", async function() {
+    
     try {
+        const renderButton = this; 
+        toggleButtonColor(renderButton);
         await submitRenderRequest(templateId, renderId, uploadi_mg);
-        videoPlayer.pause();
+        
         updateProgressBar(5); 
         console.log("Render request submitted successfully");
     } catch (error) {
@@ -910,6 +925,8 @@ function updateProgressBar(percentage) {
 }    
 
 async function submitRenderRequest(templateId, renderId, uploadi_mg) {
+    const renderButton = this; 
+    
     const serverUrl = 'https://weebhookplainlyrender.onrender.com/submit_render'; 
     const payload = {
         templateId: templateId,
@@ -918,9 +935,6 @@ async function submitRenderRequest(templateId, renderId, uploadi_mg) {
             changeimg: uploadi_mg  // Add other parameters if necessary
         }
     };
-    videoPlayer.pause();
-    updateProgressBar(92); // Progress after submitting the render
-
     try {
         const response = await fetch(serverUrl, {
             method: 'POST',
@@ -932,42 +946,27 @@ async function submitRenderRequest(templateId, renderId, uploadi_mg) {
         
         const data = await response.json();
         if (response.ok) {
-            videoPlayer.pause();
-            updateProgressBar(96); // Near completion
-            console.log('Render request submitted successfully:', data);
-            
-            // Play the rendered video
+            console.log('Render request submitted successfully:', data);// Play the rendered video
             const newViUrl = data.video_url;
             videoPlayer.src = newViUrl;
             videoPlayer.play();
-            updateProgressBar(99);  // Complete progress when the video is ready
+            stopButtonColorToggle();
+            renderButton.classList.remove('processing-green');
         } else {
             console.error('Failed to submit render request:', data.error || 'Unknown error');
-            alert('Failed to submit render request.');
+            
         }
     } catch (error) {
         console.error('Error during render request submission:', error);
-        alert('Error during render request submission.');
+        
     }
 }
     updateProgressBar(100); 
 });
-
-// Selecting the anchor element by its ID
-
-// Add a click event listener to the button
-
-
-    // Store the URL from data
     const newViUrl = data.video_url;
-    
-
-    // Ensure the DOM is fully loaded before attaching the event listener
     window.addEventListener('DOMContentLoaded', (event) => {
         // Select the button
-        const exportButton = document.getElementById('export-templete');
-
-        // Check if the button exists in the DOM
+        const exportButton = document.getElementById('export-templete');    // Check if the button exists in the DOM
         if (exportButton) {
             // Add click event listener to redirect when clicked
             exportButton.addEventListener('click', function() {
