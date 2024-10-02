@@ -20,6 +20,8 @@
          }
          
          </script>
+         
+         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
        <link rel="icon" href="https://res.cloudinary.com/dkr5qwdjd/image/upload/v1726940057/Mythesis_images/qwbmpso8kb9dkr4bdhkm.png" type="image/x-icon">
        <meta charset="UTF-8">
@@ -33,145 +35,202 @@
    </head>
     <style>
         
-        body {
-            margin: 0;
-            font-family: "SF Pro Display","SF Pro Icons","Apple WebExp Icons Custom","Helvetica Neue",Helvetica,Arial,sans-serif;
-        }
-        
-        
-        .category {
-            margin-bottom: 0px;
-        }
-        .category h2 {
-            font-family: Netflix Sans,Helvetica Neue,Segoe UI,Roboto,Ubuntu,sans-serif;
-            margin-left: 10px;
-            margin-bottom: 0;
-            font-size:medium;
-            font-weight:bolder;
-        }
-        .template-container {
-            display: flex;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-        }
-        #videos-container{
-            margin: 10px;
-        }
-        .template-item {
-            flex: 0 0 auto;
-            margin: 0;
-            border: none;
-            
-            padding: 10px;
-            position: relative;
-            cursor: pointer;
-            scroll-snap-align: start;
-        }
-        .template-item video {
-            width: 110px;
-            height: auto;
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        }
-    
-        .header {
-            position:relative ;
-    display: flex;
+        /* General Styling */
+body {
     margin: 0;
+    font-family: "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: #f8f8f8; /* Light background for better contrast */
+    color: #333; /* Darker text for readability */
+}
+
+/* Header */
+.header {
+    display: flex;
     align-items: center;
-    padding: 10px;
+    justify-content: space-between; /* Space between logo and form */
+    padding: 15px 20px;
     background-color: #181818; /* Dark background */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add subtle shadow for depth */
 }
 
 .logo-container {
     display: flex;
     align-items: center;
-    background-color: #3d3d3d; /* Similar background to the button */
-    padding: 10px 20px;
-    border-radius: 25px;
 }
 
 .logo-icon {
-    width: 20px;
-    height: 20px;
-    margin-left: 2px;
-    margin-right: 10px; /* Space between icon and text */
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
 }
 
 .logo-text {
-    color: white; /* Text color */
-    font-family: Arial, sans-serif;
-    font-size: 16px;
-}
-.form{
-display: flex;
-position: relative;
-margin: 20px;
-
-
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
 }
 
-.form .fa-search{
-
-position: absolute;
-top:20px;
-left: 20px;
-color: #9ca3af;
-
+/* Form Styling */
+.form {
+    display: flex;
+    align-items: center;
+    position: relative;
+    flex-grow: 1;
+    max-width: 500px; /* Restrict form width for better alignment */
+    margin-left: auto; /* Push form to the right */
 }
-.form-control {
-    top: -20px;
+
+.form .fa-search {
     position: absolute;
-    padding-right: 70px;
-}
-.form span{
-
-position: absolute;
-left: 180px;
-top: 0;
-padding: 2px;
-border-left: 1px solid #d1d5db;
-
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
 }
 
-.left-pan{
-padding-left: 7px;
+.form-input {
+    width: 100%;
+    padding: 10px 15px 10px 45px; /* Enough space for the search icon */
+    border-radius: 20px;
+    border: 1px solid #d1d5db;
+    background-color: white;
+    font-size: 16px;
+    transition: border-color 0.2s;
 }
 
-.left-pan i{
-
-padding-left: 10px;
+.form-input:focus {
+    border-color: #3b82f6; /* Add color to indicate focus */
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+    outline: none;
 }
 
-.form-input{
-
-height: 40px;
-text-indent: 33px;
-border-radius: 10px;
-}
-label, button, input {
-    outline: none; /* Remove default focus outline */
-}
-
-label:focus, button:focus, input:focus {
-    outline: none; /* Remove outline when focused */
-    box-shadow: none; /* Also remove any box-shadow if applied on focus */
+.form span {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding-left: 10px;
+    color: #9ca3af;
+    border-left: 1px solid #d1d5db;
 }
 
-.form-input:focus{
-
-box-shadow: none;
-border:none;
-}
-.addo{
-position: relative;
-top: 5px;
-margin-left: 180px;
-
+/* Template Container */
+.template-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 15px;
+    margin-bottom: 20px;
 }
 
+.template-item {
+    flex: 0 0 auto;
+    margin-right: 15px;
+    scroll-snap-align: start;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.template-item video {
+    width: 150px; /* Make video size slightly larger */
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.template-item:hover {
+    transform: scale(1.05); /* Slight hover effect */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+}
+
+/* Category Title */
+.category {
+    margin-bottom: 10px;
+}
+
+.category h2 {
+    margin-left: 20px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #181818;
+}
+
+/* Responsiveness */
+@media screen and (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .logo-container {
+        margin-bottom: 10px;
+    }
+
+    .form {
+        max-width: 100%;
+    }
+
+    .template-item video {
+        width: 120px; /* Adjust video size for smaller screens */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .template-item video {
+        width: 100px; /* Adjust video size for very small screens */
+    }
+
+    .form .fa-search {
+        left: 10px; /* Adjust icon position */
+    }
+
+    .form-input {
+        padding-left: 35px; /* Adjust padding for icon */
+    }
+
+    .category h2 {
+        font-size: 1.25rem;
+    }
+}
+/* General styling for the refresh icon */
+.refresh-icon {
+    position: absolute;
+    margin: 10px;
+    margin-left: 90%;
+    font-size: 16px;
+    color: #4a4a4a; /* Change color to a subtle gray */
+    border: none;
+    background: none;
+    cursor: pointer;
+    outline: none;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Animation for rotation */
+.refresh-icon.spin {
+    animation: rotate 2s linear infinite; /* Spins every 2 seconds */
+}
+
+/* Rotate keyframes */
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* When hovered, slightly increase the icon size */
+.refresh-icon:hover {
+    transform: scale(1.1);
+}
+
+#loader {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 20px;
+}
     </style>
 </head>
 <body>
@@ -715,7 +774,14 @@ margin-left: 180px;
         
     </header>
     
-    <button id="refreshButton" class="fa fa-refresh fa-spin" style="font-size:54px"></button>
+    <button id="refreshButton" class="refresh-icon">
+        <i class="fa fa-refresh"></i>
+      </button>
+      <div id="loader" style="display: none;">
+        <p>✨ Loading premium Free templates...
+        </p>
+      </div>
+
     <div id="videos-container"></div>
 
     <script>
@@ -770,6 +836,7 @@ margin-left: 180px;
             categoryDiv.appendChild(videoContainer);
             container.appendChild(categoryDiv);
         }
+        document.getElementById('loader').style.display = 'none'; 
     } catch (error) {
         console.error("Error fetching videos:", error);
     }
@@ -777,31 +844,41 @@ margin-left: 180px;
 
 // Call to refresh the cache on the server
 async function refreshCache() {
-            try {
-                const response = await fetch('/refresh_cache', {
-                    method: 'POST'
-                });
+    const refreshButton = document.getElementById('refreshButton');
 
-                if (response.ok) {
-                    console.log("Cache refreshed successfully.");
-                    fetchVideos();  // Fetch updated videos after refreshing the cache
-                } else {
-                    console.error("Failed to refresh cache.");
-                }
-            } catch (error) {
-                console.error("Error refreshing cache:", error);
-            }
+    // Add spin class to start rotating
+    refreshButton.classList.add('spin');
+
+    try {
+        const response = await fetch('/refresh_cache', {
+            method: 'POST'
+        });
+
+        if (response.ok) {
+            console.log("Cache refreshed successfully.");
+            fetchVideos();  // Fetch updated videos after refreshing the cache
+        } else {
+            console.error("Failed to refresh cache.");
         }
+    } catch (error) {
+        console.error("Error refreshing cache:", error);
+    } finally {
+        // Remove spin class to stop rotating once refresh is done
+        refreshButton.classList.remove('spin');
+    }
+}
 
-        // Attach event listener to the refresh button
-        document.getElementById('refreshButton').addEventListener('click', refreshCache);
+// Attach event listener to the refresh button
+document.getElementById('refreshButton').addEventListener('click', refreshCache);
 
-        // Load videos on page load
-        
 
-    // Load videos on page load
+// Load videos asynchronously after page load
+window.onload = function() {
+    // Show loader during video fetch
+    document.getElementById('loader').style.display = 'block';
+
     fetchVideos();
-
+}
 
     </script>
 </body>
