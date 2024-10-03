@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/cropperjs/dist/cropper.css" />
     <script src="https://unpkg.com/cropperjs/dist/cropper.js"></script>
     <link rel="icon" href="https://res.cloudinary.com/dkr5qwdjd/image/upload/v1726940057/Mythesis_images/qwbmpso8kb9dkr4bdhkm.png" type="image/x-icon">
-    <title>Edit Section</title>
+    <title>Edit Template</title>
     <style>
 body {
     font-family: Arial, sans-serif;
@@ -18,6 +19,7 @@ body {
     margin: 0;
     overflow-x: hidden;
 }
+
 .video-container {
     display: flex; /* Enables flexbox for centering content */
     align-items: center; /* Centers items vertically */
@@ -425,9 +427,9 @@ button svg {
 .render-button {
     position: absolute;
     top: 80px;
-    
+    border: none;
+    border-radius: 10px;
     background-color: #4ade80; /* Dark background */
-    
     color: white;
     border: none;
     padding: 20px 40px;
@@ -436,9 +438,18 @@ button svg {
     align-items: center;
     gap: 8px;
     transition: background-color 0.3s ease;
+    
+}
+/* Adjust the layout for mobile devices */
+@media only screen and (max-width: 768px) {
+    body {
+        width: 410px;
+    }
 }
 .processing-green {
+    content: 'Rendering';
     background-color: #35a25d; /* Dark Green */
+
 }
 
 .spinner {
@@ -539,11 +550,11 @@ button svg {
                 
             </button>
     
-            <button class="header-button export-button" id="export-templete">
+            <div onclick="attachRedirectToButton(Url)" class="header-button export-button" id="export-templete">
                 <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13V4M7 14H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-2m-1-5-4 5-4-5m9 8h.01"/>
                 </svg>
-            </button>
+            </div>
             
             
         </div>
@@ -596,13 +607,13 @@ button svg {
 
                       
                 </button>
-                <button id="renderButton" class="render-button">
+                <div id="renderButton" class="render-button">
                     <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                         <path fill-rule="evenodd" d="M9 7V2.221a2 2 0 0 0-.5.365L4.586 6.5a2 2 0 0 0-.365.5H9Zm2 0V2h7a2 2 0 0 1 2 2v9.293l-2-2a1 1 0 0 0-1.414 1.414l.293.293h-6.586a1 1 0 1 0 0 2h6.586l-.293.293A1 1 0 0 0 18 16.707l2-2V20a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9h5a2 2 0 0 0 2-2Z" clip-rule="evenodd"/>
                       </svg>
                       
                     Render
-                </button>
+                </div>
             </div>
             <button class="option-button" id="costomzing"style="background-color:#1f1f1f">
                 <h4>Pre-Render Settings</h4>
@@ -880,6 +891,7 @@ document.getElementById("renderButton").addEventListener("click", async function
         console.log("Render request submitted successfully");
     } catch (error) {
         console.error("Error in rendering:", error);
+        stopButtonColorToggle();
     }
 });
     // Upload image function
@@ -971,7 +983,7 @@ async function submitRenderRequest(templateId, renderId, uploadi_mg) {
         if (exportButton) {
             // Add click event listener to redirect when clicked
             exportButton.addEventListener('click', function() {
-                window.location.href = newViUrl; // Redirect to the URL stored in newViUrl
+                window.location.href = url; // Redirect to the URL stored in newViUrl
             });
         } else {
             console.log('Button not found!');
