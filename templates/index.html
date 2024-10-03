@@ -777,109 +777,99 @@ body {
     <button id="refreshButton" class="refresh-icon">
         <i class="fa fa-refresh"></i>
       </button>
+      
       <div id="loader" style="display: none;">
-        <p>✨ Loading premium Free templates...
-        </p>
+        <p>✨ Loading premium Free templates...</p>
       </div>
-
-    <div id="videos-container"></div>
-
-    <script>
-        
-        
+      
+      <div id="videos-container"></div>
+      
+      <script>
+        // Function to fetch videos asynchronously
         async function fetchVideos() {
-    try {
-        const response = await fetch('/get_videos');  // Make sure backend sends categorized videos
-        const data = await response.json();
-
-        const container = document.getElementById('videos-container');
-        container.innerHTML = '';  // Clear existing videos before adding new ones
-
-        for (const [category, videos] of Object.entries(data)) {
-            const categoryDiv = document.createElement('div');
-            categoryDiv.classList.add('category');
-
-            const categoryTitle = document.createElement('h2');
-            categoryTitle.innerText = category;
-            categoryDiv.appendChild(categoryTitle);
-
-            const videoContainer = document.createElement('div');
-            videoContainer.classList.add('template-container');
-
-            videos.forEach(videoUrl => {
+          try {
+            const response = await fetch('/get_videos');  // Fetch categorized videos from the server
+            const data = await response.json();
+      
+            const container = document.getElementById('videos-container');
+            container.innerHTML = '';  // Clear existing videos before adding new ones
+      
+            for (const [category, videos] of Object.entries(data)) {
+              const categoryDiv = document.createElement('div');
+              categoryDiv.classList.add('category');
+      
+              const categoryTitle = document.createElement('h2');
+              categoryTitle.innerText = category;
+              categoryDiv.appendChild(categoryTitle);
+      
+              const videoContainer = document.createElement('div');
+              videoContainer.classList.add('template-container');
+      
+              videos.forEach(videoUrl => {
                 const templateItem = document.createElement('div');
                 templateItem.className = 'template-item';
-
-                // Create a video element and set a small preload portion
+      
+                // Create a video element and load metadata only for thumbnails
                 const videoElement = document.createElement('video');
-                videoElement.src = `${videoUrl}#t=0`;
-                videoElement.preload = "metadata";
+                videoElement.src = `${videoUrl}#t=0`;  // Start from 0 to get the first frame
+                videoElement.preload = "metadata";  // Preload only metadata to keep it lightweight
                 videoElement.controls = false;  // Disable controls for thumbnail
-
-                // Wait until metadata is loaded to set current time to the last frame
+      
+                // Set thumbnail to display middle frame of video
                 videoElement.addEventListener('loadedmetadata', function() {
-                    videoElement.currentTime = videoElement.duration / 2;
-                    videoElement.pause();  // Ensure video stays paused at the last frame
+                  videoElement.currentTime = videoElement.duration / 2;
+                  videoElement.pause();  // Ensure video stays paused on the middle frame
                 });
-
-                // Add the video element to the template item
+      
+                // Add event listener to navigate to editing page when clicked
                 templateItem.appendChild(videoElement);
-
-                // Add event listener to navigate to the editing page with the video URL
                 templateItem.addEventListener('click', function() {
-                    window.location.href = `/edit_template?video_url=${encodeURIComponent(videoUrl)}`;
+                  window.location.href = `/edit_template?video_url=${encodeURIComponent(videoUrl)}`;
                 });
-
+      
                 videoContainer.appendChild(templateItem);
-            });
-
-            categoryDiv.appendChild(videoContainer);
-            container.appendChild(categoryDiv);
+              });
+      
+              categoryDiv.appendChild(videoContainer);
+              container.appendChild(categoryDiv);
+            }
+      
+            // Hide loader once videos are loaded
+            document.getElementById('loader').style.display = 'none'; 
+          } catch (error) {
+            console.error("Error fetching videos:", error);
+          }
         }
-        document.getElementById('loader').style.display = 'none'; 
-    } catch (error) {
-        console.error("Error fetching videos:", error);
-    }
-}
-
-// Call to refresh the cache on the server
-async function refreshCache() {
-    const refreshButton = document.getElementById('refreshButton');
-
-    // Add spin class to start rotating
-    refreshButton.classList.add('spin');
-
-    try {
-        const response = await fetch('/refresh_cache', {
-            method: 'POST'
-        });
-
-        if (response.ok) {
-            console.log("Cache refreshed successfully.");
-            fetchVideos();  // Fetch updated videos after refreshing the cache
-        } else {
-            console.error("Failed to refresh cache.");
+      
+        // Function to refresh cache
+        async function refreshCache() {
+          const refreshButton = document.getElementById('refreshButton');
+          refreshButton.classList.add('spin');  // Start spinning refresh icon
+      
+          try {
+            const response = await fetch('/refresh_cache', { method: 'POST' });
+      
+            if (response.ok) {
+              console.log("Cache refreshed successfully.");
+              fetchVideos();  // Fetch updated videos after cache refresh
+            } else {
+              console.error("Failed to refresh cache.");
+            }
+          } catch (error) {
+            console.error("Error refreshing cache:", error);
+          } finally {
+            refreshButton.classList.remove('spin');  // Stop spinning refresh icon
+          }
         }
-    } catch (error) {
-        console.error("Error refreshing cache:", error);
-    } finally {
-        // Remove spin class to stop rotating once refresh is done
-        refreshButton.classList.remove('spin');
-    }
-}
-
-// Attach event listener to the refresh button
-document.getElementById('refreshButton').addEventListener('click', refreshCache);
-
-
-// Load videos asynchronously after page load
-window.onload = function() {
-    // Show loader during video fetch
-    document.getElementById('loader').style.display = 'block';
-
-    fetchVideos();
-}
-
-    </script>
+      
+        // Attach event listener to refresh button
+        document.getElementById('refreshButton').addEventListener('click', refreshCache);
+      
+        // Load videos after page content has been fully loaded
+        window.onload = function() {
+          document.getElementById('loader').style.display = 'block';  // Show loader before fetching videos
+          fetchVideos();  // Fetch videos after basic page content has loaded
+        }
+      </script>
 </body>
 </html>
