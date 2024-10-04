@@ -682,12 +682,34 @@ let video_url = null;  // Initially, no video URL
 
 // This function is called when the video URL is received from the webhook
 function onWebhookReceive(url) {
-    video_url = url;  // Set the video URL
+    video_url = url;
+    initiateAutoDownload(video_url);
     updateButtonState();
+
 }
 
-// Enable the button and change its appearance if the URL is available
+// Function to enable the download button when video URL is available
+function attachDownloadToButton(videoUrl) {
+    const downloadButton = document.getElementById('export-templete');
+    if (downloadButton) {
+        downloadButton.style.display = 'inline-block';  // Show download button
+        downloadButton.href = videoUrl;  // Set the video URL as download link
+        downloadButton.download = 'rendered_video.mp4';  // File name for download
+    }
+}
 
+// Handle the download when the button is clicked
+document.getElementById('export-templete').addEventListener('click', function() {
+    const videoUrl = document.getElementById('videoPlayer').src;
+    if (videoUrl) {
+        const a = document.createElement('a');
+        a.href = videoUrl;
+        a.download = 'rendered_video.mp4';  // Set file name
+        document.body.appendChild(a);
+        a.click();  // Trigger download
+        document.body.removeChild(a);  // Clean up
+    }
+});
 
 // Open the video URL in a new tab when the button is clicked
 function openVideoUrl() {
@@ -977,27 +999,7 @@ async function submitRenderRequest(templateId, renderId, uploadi_mg) {
     updateProgressBar(100); 
 });
     const newViUrl = data.video_url;
-    window.addEventListener('DOMContentLoaded', (event) => {
-        // Select the button
-        const exportButton = document.getElementById('export-templete');    // Check if the button exists in the DOM
-        if (exportButton) {
-            // Add click event listener to redirect when clicked
-            exportButton.addEventListener('click', function() {
-                window.location.href = url; // Redirect to the URL stored in newViUrl
-            });
-        } else {
-            console.log('Button not found!');
-        }
-    });
-// Function to attach redirection functionality to the button
-function attachRedirectToButton(url) {
-    const exportButton = document.getElementById('export-templete');
-
-    // Add an event listener to redirect on click
-    exportButton.addEventListener('click', () => {
-        window.location.href = url; // Redirect to the video URL
-    });
-}
+    console.log(newViUrl)
 
     </script>
 </body>
