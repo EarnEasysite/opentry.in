@@ -22,14 +22,21 @@ def fetch_videos_by_tags(tags):
         for tag in tags:
             response = cloudinary.api.resources_by_tag(
                 tag=tag,
-                resource_type="video",  # Specify video type
-                max_results=10  # Limit number of videos fetched per tag
+                resource_type="video",  
+                max_results=10  # Adjust this limit as needed
             )
 
-            # Extract video URLs for this tag
-            video_urls = [resource['secure_url'] for resource in response.get('resources', [])]
+            # Extract video URLs and generate thumbnails
+            video_urls = [
+                {
+                    'video_url': resource['secure_url'],
+                    'thumbnail_url': cloudinary.CloudinaryImage(resource['public_id']).build_url(
+                        resource_type="video", format="jpg", transformation=[{'start_offset': '2', 'width': 300, 'height': 200, 'crop': 'fill'}]
+                    )
+                }
+                for resource in response.get('resources', [])
+            ]
 
-            # Add videos to the categorized dictionary
             if video_urls:
                 categorized_videos[tag] = video_urls
 
