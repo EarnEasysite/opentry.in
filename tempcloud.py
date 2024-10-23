@@ -1,72 +1,28 @@
-from flask import Flask, jsonify, render_template
-import cloudinary
-import cloudinary.api
-import os
+function attachDownloadToButton(videoUrl) {
+    const downloadButton = document.getElementById('export-templete');
+    if (downloadButton) {
+        downloadButton.style.display = 'inline-block';  // Show download button
+        downloadButton.href = videoUrl;  // Set the video URL as download link
+        downloadButton.download = 'rendered_video.mp4';  // File name for download
+    }
+}
 
-app = Flask(__name__)
+// Handle the download when the button is clicked
+document.getElementById('export-templete').addEventListener('click', function() {
+    const videoUrl = document.getElementById('videoPlayer').src;
+    if (videoUrl) {
+        const a = document.createElement('a');
+        a.href = videoUrl;
+        a.download = 'rendered_video.mp4';  // Set file name
+        document.body.appendChild(a);
+        a.click();  // Trigger download
+        document.body.removeChild(a);  // Clean up
+    }
+});
 
-# Configure Cloudinary with your credentials
-cloudinary.config(
-    cloud_name="dwj7tznit",
-    api_key="678549699212321",
-    api_secret="b0QPfC_oXWUluc6Mt2Y92YzNK6E"
-)
-
-# Global variable to hold preloaded video data
-video_cache = {}
-
-# Function to fetch videos by tag from Cloudinary
-def fetch_videos_by_tags(tags):
-    categorized_videos = {}
-    try:
-        for tag in tags:
-            response = cloudinary.api.resources_by_tag(
-                tag=tag,
-                resource_type="video",  # Specify video type
-                max_results=10  # Limit number of videos fetched per tag
-            )
-
-            # Extract video URLs for this tag
-            video_urls = [resource['secure_url'] for resource in response.get('resources', [])]
-
-            # Add videos to the categorized dictionary
-            if video_urls:
-                categorized_videos[tag] = video_urls
-
-        return categorized_videos
-    except Exception as e:
-        print(f"Error: {str(e)}")
-        return {}
-
-# Function to preload videos at server startup
-def preload_videos():
-    global video_cache
-    tags = ['ads', 'text', 'image', 'banner']  # Modify this list as needed
-    video_cache = fetch_videos_by_tags(tags)
-    print("Videos preloaded successfully.")
-
-# Route to fetch categorized videos
-@app.route('/get_videos', methods=['GET'])
-def get_videos():
-    return jsonify(video_cache)
-
-# Route to serve the main page with video templates
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-# Route to serve the edit template page
-@app.route('/edit_template')
-def edit_template():
-    return render_template('edit_template.html')
-# Route to manually refresh cached videos
-@app.route('/refresh_cache', methods=['POST'])
-def refresh_cache():
-    preload_videos()  # Reload video data from Cloudinary
-    return jsonify({"message": "Cache refreshed successfully"}), 200
-
-
-if __name__ == '__main__':
-    preload_videos()  # Preload videos before starting the server
-    port = int(os.environ.get('PORT', 5000))  # Get port from environment, default to 5000
-    app.run(host='0.0.0.0', port=port)
+// Open the video URL in a new tab when the button is clicked
+function openVideoUrl() {
+    if (video_url && video_url.trim() !== "") {
+        window.open(video_url, '_blank');
+    }
+}
